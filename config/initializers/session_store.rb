@@ -6,7 +6,7 @@
 # no regular words or you'll be exposed to dictionary attacks.
 ActionController::Base.session = {
   :key         => '_rafa_examples_session',
-  :secret      => '9d365627032546726ea4764152855bd4872c5c9d7731d60740dba5ce95763c376d043c2c415962e4874d3b6a23d0ebe7cf5d35613833f270f68017774b9b75b7'
+  :secret      => 'b217a0591afb80c9d9143b03e899dd95abf58a5e9e24a63afde23bc9423e6967eba853a2a8359be4760bdb1b22391f4a3831c5aba7c1d2b3cb358012a76c4b5e'
 }
 
 # Use the database for sessions instead of the cookie-based default,
