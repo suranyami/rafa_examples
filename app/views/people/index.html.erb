@@ -1,0 +1,44 @@
+<h1>Listing people</h1>
+<%= button_to 'New person', new_person_path, :method => :get %>
+<%= will_paginate @people %>
+<table>
+  <tr>
+    <th>First name</th>
+    <th>Surname</th>
+    <th>Birthday</th>
+    <th>Job</th>
+  </tr>
+
+  <% @people.each do |person| %>
+  <tr>
+    <td><%=h person.first_name %></td>
+    <td><%=h person.surname %></td>
+    <td><%=h person.birthday %></td>
+    <td><%=h person.job %></td>
+    <td><%= link_to 'Show', person %></td>
+    <td><%= link_to 'Edit', edit_person_path(person) %></td>
+    <td><%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+  <% end %>
+</table>
+
+<div id="placeholder"></div>
+
+<%=
+  # Construction of canvas via div id or by specifying coordinates
+  canvas('placeholder', 400, 400) do |canvas|
+    bars = canvas.barchart(0, 0, 300, 300, @surname_pop.values, {:fill => '#CC0000', :id => 'surname_bars'})
+    canvas << "surname_bars.bars.attr({stroke: 'black'})"
+  end
+%>
+
+<table>
+  <% @surname_pop.each do |surname, pop| %>
+  <tr>
+    <td><%= h surname %></td>
+    <td><%= h pop %></td>
+  </tr>
+  <% end %>
+</table>
+
+<div id="holder"></div>
