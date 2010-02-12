@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>gRaphaël Dynamic Bar Chart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="author" content="Dmitry Baranovskiy">
+        <meta name="description" content="Charting JavaScript Library">
+        <link rel="stylesheet" href="demo.css" type="text/css" media="screen" charset="utf-8">
+        <link rel="stylesheet" href="demo-print.css" type="text/css" media="print" charset="utf-8">
+        <script src="javascripts/raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascripts/g.raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="javascripts/g.bar.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        window.onload = function() { 
+          r = Raphael("holder", 1240, 600); 
+          var fin = function () { 
+            this.flag = r.g.popup(this.bar.x, this.bar.y, 
+              this.bar.value || "0").insertBefore(this); 
+            }; 
+            
+            var fout = function () { 
+              this.flag.animate({opacity: 0}, 300, function () 
+              {this.remove();}); 
+            }; 
+            
+            var states = ["California", "Illinois", "Fish", "Colorado", "Arkan", "Minneso", "North\nDakota", "Georgia", "Nevada", "Rhode Island"]; 
+            
+            var values = [1,7,8,2,3,5,10,6,4,9]; 
+            var values2 = [7,6,5,10,9,8,4,3,2,1]; 
+            
+            r.g.text(60, 30, "Single unstacked");
+            r.g.barchart(0, 0, 550, 250, [values], { stacked: false }).hover(fin, fout).label([states]).drop(10,10, ); 
+            r.g.text(660, 30, "Single stacked"); 
+            r.g.barchart(600, 0, 550, 250, [values], { stacked:  true}).hover(fin, fout).label([states], false); 
+            r.g.text(60, 300, "Multi unstacked"); 
+            r.g.barchart(0, 300, 550, 250, [values, values2], { stacked: false }).hover(fin, fout).label([states, states], true); 
+            r.g.text(660, 300, "Multi stacked"); 
+            r.g.barchart(600, 300, 550, 250, [values, values2], { stacked: true }).hover(fin, fout).label([states], false);
+          }
+        </script>
+    </head>
+    <body class="raphael" id="g.raphael.dmitry.baranovskiy.com">
+        <div id="holder"></div>
+    </body>
+</html>
