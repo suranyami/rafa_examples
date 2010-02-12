@@ -27,8 +27,18 @@
 <%=
   # Construction of canvas via div id or by specifying coordinates
   canvas('placeholder', 400, 400) do |canvas|
-    bars = canvas.barchart(0, 0, 300, 300, @surname_pop.values, {:fill => '#CC0000', :id => 'surname_bars'})
-    canvas << "surname_bars.bars.attr({stroke: 'black'})"
+    canvas << "var fin = function () {
+        this.flag = #{canvas.name}.g.popup(this.bar.x, this.bar.y, this.bar.value || '0').insertBefore(this);
+    },
+    fout = function () {
+        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+    };"
+    bars = canvas.barchart(50, 50, 300, 300, [@surname_pop.values], {:fill => '#CC0000', :id => 'surname_bars', :axis => true, :y_stroke_color => 'Silver'})
+    canvas << "surname_bars.bars.attr({stroke: 'black'});"
+    canvas << "surname_bars.hover(fin, fout);"
+    canvas << "surname_bars.xlabels(#{@surname_pop.keys.to_json}, true, null, -90);"
+    canvas << "surname_bars.ylabels();"
+    canvas << "surname_bars.labels.attr('font', '9px Georgia');"
   end
 %>
 
