@@ -4,10 +4,12 @@ one:
   first_name: MyString
   surname: MyString
   birthday: 2010-02-05
+  birthday: 2010-02-10
   job: MyString
 
 two:
   first_name: MyString
   surname: MyString
   birthday: 2010-02-05
+  birthday: 2010-02-10
   job: MyString
