@@ -15,6 +15,11 @@ class PeopleController < ApplicationController
     end
   end
 
+  def sample
+    SampleDataGenerator.create
+    redirect_to(people_url)
+  end
+
   # GET /people/1
   # GET /people/1.xml
   def show

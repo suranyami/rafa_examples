@@ -4,6 +4,7 @@ require File.join(dirname, '../canvas/elements')
 
 module Rafa
   module Elements
+   include Logging
    
     # Creates a new +Canvas+ element, yields it and returns the
     # resulting javascript for the block call.

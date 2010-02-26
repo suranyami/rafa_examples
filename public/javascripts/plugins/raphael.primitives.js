@@ -41,6 +41,7 @@ Raphael.fn.spike = function (cx, cy, rout, rin, n) {
     points.push("z");
     return this.path(points);
 };
+
 Raphael.fn.polyline = function () {
     var points = "M".concat(arguments[0] || 0, ",", arguments[1] || 0, "L");
     for (var i = 2, ii = arguments.length - 1; i < ii; i++) {
@@ -49,6 +50,7 @@ Raphael.fn.polyline = function () {
     arguments[ii].toLowerCase() == "z" && (points += "z");
     return this.path(points);
 };
+
 Raphael.fn.polygon = function (cx, cy, r, n) {
     n = +n < 3 || !n ? 5 : n;
     var points = ["M", cx, cy - r, "L"],
@@ -59,9 +61,11 @@ Raphael.fn.polygon = function (cx, cy, r, n) {
     points.push("z");
     return this.path(points);
 };
+
 Raphael.fn.line = function (x1, y1, x2, y2) {
     return this.path(["M", x1, y1, "L", x2, y2]);
 };
+
 Raphael.fn.drawGrid = function (x, y, w, h, wv, hv, color) {
     color = color || "#000";
     var path = ["M", x, y, "L", x + w, y, x + w, y + h, x, y + h, x, y],

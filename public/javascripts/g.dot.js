@@ -32,9 +32,12 @@ Raphael.fn.g.dotchart = function (x, y, width, height, valuesx, valuesy, size, o
     for (var i = 0; i < len; i++) {
         R[i] = Math.min(Math.sqrt(size[i] / Math.PI) * 2 / k, max);
     }
+
     gutter = Math.max.apply(Math, R.concat(gutter));
+
     var axis = this.set(),
         maxR = Math.max.apply(Math, R);
+
     if (opts.axis) {
         var ax = (opts.axis + "").split(/[,\s]+/);
         drawAxis(ax);
@@ -44,17 +47,21 @@ Raphael.fn.g.dotchart = function (x, y, width, height, valuesx, valuesy, size, o
             g[i] = bb + gutter;
             b[i] = bb;
         }
+
         gutter = Math.max.apply(Math, g.concat(gutter));
         for (var i = 0, ii = ax.length; i < ii; i++) if (ax[i].all) {
             ax[i].remove();
             ax[i] = 1;
         }
+
         drawAxis(ax);
         for (var i = 0, ii = ax.length; i < ii; i++) if (ax[i].all) {
             axis.push(ax[i].all);
         }
+
         res.axis = axis;
     }
+
     var kx = (width - gutter * 2) / ((maxx - minx) || 1),
         ky = (height - gutter * 2) / ((maxy - miny) || 1);
     for (var i = 0, ii = valuesy.length; i < ii; i++) {

@@ -10,22 +10,27 @@ Raphael.el.absolutely = function () {
     this.isAbsolute = 1;
     return this;
 };
+
 Raphael.el.relatively = function () {
     this.isAbsolute = 0;
     return this;
 };
+
 Raphael.el.moveTo = function (x, y) {
     this._last = {x: x, y: y};
     return this.attr({path: this.attrs.path + ["m", "M"][+this.isAbsolute] + parseFloat(x) + " " + parseFloat(y)});
 };
+
 Raphael.el.lineTo = function (x, y) {
     this._last = {x: x, y: y};
     return this.attr({path: this.attrs.path + ["l", "L"][+this.isAbsolute] + parseFloat(x) + " " + parseFloat(y)});
 };
+
 Raphael.el.arcTo = function (rx, ry, large_arc_flag, sweep_flag, x, y, angle) {
     this._last = {x: x, y: y};
     return this.attr({path: this.attrs.path + ["a", "A"][+this.isAbsolute] + [parseFloat(rx), parseFloat(ry), +angle, large_arc_flag, sweep_flag, parseFloat(x), parseFloat(y)].join(" ")});
 };
+
 Raphael.el.curveTo = function () {
     var args = Array.prototype.splice.call(arguments, 0, arguments.length),
         d = [0, 0, 0, 0, "s", 0, "c"][args.length] || "";
@@ -33,11 +38,13 @@ Raphael.el.curveTo = function () {
     this._last = {x: args[args.length - 2], y: args[args.length - 1]};
     return this.attr({path: this.attrs.path + d + args});
 };
+
 Raphael.el.cplineTo = function (x, y, w) {
     this.attr({path: this.attrs.path + ["C", this._last.x + w, this._last.y, x - w, y, x, y]});
     this._last = {x: x, y: y};
     return this;
 };
+
 Raphael.el.qcurveTo = function () {
     var d = [0, 1, "t", 3, "q"][arguments.length],
         args = Array.prototype.splice.call(arguments, 0, arguments.length);
@@ -47,6 +54,7 @@ Raphael.el.qcurveTo = function () {
     this._last = {x: args[args.length - 2], y: args[args.length - 1]};
     return this.attr({path: this.attrs.path + d + args});
 };
+
 Raphael.el.addRoundedCorner = function (r, dir) {
     var rollback = this.isAbsolute;
     rollback && this.relatively();
@@ -55,6 +63,7 @@ Raphael.el.addRoundedCorner = function (r, dir) {
     rollback && this.absolutely();
     return this;
 };
+
 Raphael.el.andClose = function () {
     return this.attr({path: this.attrs.path + "z"});
 };

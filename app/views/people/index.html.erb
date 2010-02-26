@@ -1,4 +1,6 @@
 <h1>Listing people</h1>
+<%= button_to 'Generate Sample Data', sample_people_path, :method => :post %>
+
 <%= button_to 'New person', new_person_path, :method => :get %>
 <%= will_paginate @people %>
 <table>
@@ -25,20 +27,37 @@
 <div id="placeholder"></div>
 
 <%=
+  require 'color'
+
   # Construction of canvas via div id or by specifying coordinates
-  canvas('placeholder', 400, 400) do |canvas|
-    canvas << "var fin = function () {
-        this.flag = #{canvas.name}.g.popup(this.bar.x, this.bar.y, this.bar.value || '0').insertBefore(this);
-    },
-    fout = function () {
-        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-    };"
-    bars = canvas.barchart(50, 50, 300, 300, [@surname_pop.values], {:fill => '#CC0000', :id => 'surname_bars', :axis => true, :y_stroke_color => 'Silver'})
-    canvas << "surname_bars.bars.attr({stroke: 'black'});"
-    canvas << "surname_bars.hover(fin, fout);"
-    canvas << "surname_bars.xlabels(#{@surname_pop.keys.to_json}, true, null, -90);"
-    canvas << "surname_bars.ylabels();"
-    canvas << "surname_bars.labels.attr('font', '9px Georgia');"
+  steps = @surname_pop.length
+  step = 1.0 / steps
+  colors = []
+  g = 1.0
+  steps.times do 
+    colors << Color::GrayScale.new(g * 100)
+    g -= step
+  end
+  second_colors = []
+  colour_step = step * 360
+  cur_col = 0
+  i = 0
+  red = Color::HSL.new(0, 75, 75)
+  steps.times do
+    second_colors << colors[i].to_hsl.mix_with(red, 0.75)
+    cur_col += colour_step
+    i += 1
+  end
+  canvas('placeholder', 500, 400) do |canvas|
+    options =  {:colors => [colors.collect {|c| c.html}, second_colors.collect {|c| c.html}], :id => 'surname_bars', :axis => true, :y_stroke_color => 'Silver', :stacked => true}
+    options[:bars] = {:stroke => 'black'}
+    options[:hover_flags] = true
+    options[:x_labels] = {:isBottom => true, :angle => 0}
+    options[:y_labels] = 10
+    options[:font] = '9pt Helvetica'
+    fakes = []
+    steps.times {fakes << 25}
+    bars = canvas.barchart(50, 50, 450, 300, @surname_pop.keys, [@surname_pop.values, fakes], options)
   end
 %>
 

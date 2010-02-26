@@ -9,15 +9,16 @@ require File.join(dirname, '../canvas/boundingbox')
 
 module Rafa
   module Elements
-
+    include Logging
+    
     # This class is the superclass for all canvas elements, such as
     # Circle, Rect, Ellipse, Text and Path
     class BasicShape
-      
+
       include Rafa::Elements::Attributes
       include Rafa::Util
       include Rafa::Util::Exceptions
-      
+
       attr_accessor :canvas, :name, :bbox
 
       # Trick for chained methods to return themselves after a call.
@@ -26,11 +27,11 @@ module Rafa
         def chainable(*methods)
           methods.each do |method|
             self.class_eval <<-CODE
-              alias _chainable_#{method} #{method}
-              def #{method}(*args, &block)
-                _chainable_#{method}(*args, &block)
-                return self
-              end
+            alias _chainable_#{method} #{method}
+            def #{method}(*args, &block)
+              _chainable_#{method}(*args, &block)
+              return self
+            end
             CODE
           end
         end
@@ -121,7 +122,7 @@ module Rafa
         @canvas << js_method('attr', {attribute => value})
         return self
       end
-      
+
       # Alias for +:[]+ method
       def attr(name, value)
         self[name] = value
@@ -182,9 +183,9 @@ module Rafa
         rounded = options.delete('rounded') || options.delete(:rounded) || 0
         super(canvas, options)
         @canvas << 
-          "var #{@name} = #{@canvas.name}.rect(" + 
-            "#{topleft_x}, #{topleft_y}, #{width}, #{height}, #{rounded});"
-      apply_attributes(options)
+        "var #{@name} = #{@canvas.name}.rect(" + 
+        "#{topleft_x}, #{topleft_y}, #{width}, #{height}, #{rounded});"
+        apply_attributes(options)
       end
     end
 
@@ -193,8 +194,8 @@ module Rafa
       def initialize(canvas, center_x, center_y, radius_x, radius_y, options = {})
         super(canvas, options)
         @canvas << 
-          "var #{@name} = #{@canvas.name}.ellipse(" +
-            "#{center_x}, #{center_y}, #{radius_x}, #{radius_y});"
+        "var #{@name} = #{@canvas.name}.ellipse(" +
+        "#{center_x}, #{center_y}, #{radius_x}, #{radius_y});"
         apply_attributes(options)
       end
     end
@@ -204,21 +205,40 @@ module Rafa
       def initialize(canvas, x, y, text, options = {})
         super(canvas, options)
         @canvas << 
-          "var #{@name} = #{@canvas.name}.text(#{x}, #{y}, #{text.inspect});"
+        "var #{@name} = #{@canvas.name}.text(#{x}, #{y}, #{text.inspect});"
         apply_attributes(options)
       end
     end
-    
+
     # Represents the _barchart_ object in raphael
     class Bar < BasicShape
-      def initialize(canvas, x, y, width, height, values, options = {})
-        options_copy = options.clone
+      def initialize(canvas, x, y, width, height, categories, values, options = {})
+        opts = options.clone
         super(canvas, options)
-        @canvas << "var #{@name} = #{@canvas.name}.g.barchart(#{x}, #{y}, #{width}, #{height}, #{values.to_json}, #{options_copy.to_json});"
+        @canvas << "var #{@name} = #{@canvas.name}.g.barchart(#{x}, #{y}, #{width}, #{height}, #{categories.to_json}, #{values.to_json}, #{opts.to_json});"
+        @canvas << "surname_bars.bars.attr(#{opts[:bars].to_json});"
+        
+        if opts[:hover_flags]
+          @canvas << "var fin = function () {
+            this.flag = #{canvas.name}.g.popup(this.bar.x, this.bar.y, this.bar.value || '0').insertBefore(this);
+          },
+          fout = function () {
+            this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+          };"
+          @canvas << "surname_bars.hover(fin, fout);"
+        end
+        x = opts[:x_labels]
+        label_values = x[:labelValues] || []
+        label_values = label_values.nil? ? [] : label_values.to_json
+        @canvas << "surname_bars.xlabels(#{x[:isBottom].to_json}, [#{label_values.to_json}], #{x[:angle].to_json});" if x
+        puts "opts[:y_labels].to_json = #{opts[:y_labels].to_json}"
+        @canvas << "surname_bars.ylabels(#{opts[:y_labels].to_json});" if opts[:y_labels]
+        @canvas << "surname_bars.labels.attr('font', '#{opts[:font]}');" if opts[:font]
+
         apply_attributes(options)
       end
     end
-    
+
     # Represents the _barchart_ object in raphael
     class HBar < BasicShape
       def initialize(canvas, x, y, width, height, values, options = {})
@@ -228,7 +248,7 @@ module Rafa
         apply_attributes(options)
       end
     end
-    
+
     # Represents the _dotchart_ object in raphael
     class Dot < BasicShape
       def initialize(canvas, x, y, width, height, valuesx, valuesy, size, options = {})
@@ -238,7 +258,7 @@ module Rafa
         apply_attributes(options)
       end
     end
-    
+
     # Represents the _dotchart_ object in raphael
     class Line < BasicShape
       def initialize(canvas, x, y, width, height, valuesx, valuesy, options = {})
@@ -258,7 +278,7 @@ module Rafa
         apply_attributes(options)
       end
     end
-    
+
     # Represents the _path_ object in raphael
     class Path < BasicShape
       def initialize(canvas, attributes_or_path = {}, path = nil, &block)
@@ -292,7 +312,7 @@ module Rafa
       def move_to(x, y)
         @canvas << js_method('moveTo', x, y)
       end
-      
+
       # Wrapper for the +lineTo+ method of raphael for path drawing
       def line_to(x, y)
         @canvas << js_method('lineTo', x, y)
@@ -302,7 +322,7 @@ module Rafa
       def cpline_to(x, y, width)
         @canvas << js_method('cplineTo', x, y, width)
       end
-      
+
       # Wrapper for the +curveTo+ method of raphael for path drawing
       def curve_to(x1, y1, x2, y2, x3, y3)
         @canvas << js_method('curveTo', x1, y1, x2, y2, x3, y3)
@@ -331,7 +351,7 @@ module Rafa
       def method_missing(name, *args, &block)   #:nodoc:
         if name.to_s =~ /^(lu|ld|ru|rd|ur|ul|dr|dl)_corner$/
           rounded_corner(args[0], $1) 
-            # In Ruby 1.9 one could call rc(*args, radius)
+          # In Ruby 1.9 one could call rc(*args, radius)
         else
           super(name, *args, &block)
         end

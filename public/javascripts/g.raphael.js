@@ -5,7 +5,6 @@
 * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
 */
 
-
 (function () {
 	Raphael.fn.g = Raphael.fn.g || {};
 	Raphael.fn.g.markers = {
@@ -108,49 +107,49 @@
 		y = Math.round(y);
 		switch (ending) {
 			case "round":
-			if (!dir) {
-				var r = Math.floor(height / 2);
-				if (width < r) {
-					r = width;
-					path = ["M", x + .5, y + .5 - Math.floor(height / 2), "l", 0, 0, "a", r, Math.floor(height / 2), 0, 0, 1, 0, height, "l", 0, 0, "z"];
+				if (!dir) {
+					var r = Math.floor(height / 2);
+					if (width < r) {
+						r = width;
+						path = ["M", x + .5, y + .5 - Math.floor(height / 2), "l", 0, 0, "a", r, Math.floor(height / 2), 0, 0, 1, 0, height, "l", 0, 0, "z"];
+					} else {
+						path = ["M", x + .5, y + .5 - r, "l", width - r, 0, "a", r, r, 0, 1, 1, 0, height, "l", r - width, 0, "z"];
+					}
 				} else {
-					path = ["M", x + .5, y + .5 - r, "l", width - r, 0, "a", r, r, 0, 1, 1, 0, height, "l", r - width, 0, "z"];
+					var r = Math.floor(width / 2);
+					if (height < r) {
+						r = height;
+						path = ["M", x - Math.floor(width / 2), y, "l", 0, 0, "a", Math.floor(width / 2), r, 0, 0, 1, width, 0, "l", 0, 0, "z"];
+					} else {
+						path = ["M", x - r, y, "l", 0, r - height, "a", r, r, 0, 1, 1, width, 0, "l", 0, height - r, "z"];
+					}
 				}
-			} else {
-				var r = Math.floor(width / 2);
-				if (height < r) {
-					r = height;
-					path = ["M", x - Math.floor(width / 2), y, "l", 0, 0, "a", Math.floor(width / 2), r, 0, 0, 1, width, 0, "l", 0, 0, "z"];
-				} else {
-					path = ["M", x - r, y, "l", 0, r - height, "a", r, r, 0, 1, 1, width, 0, "l", 0, height - r, "z"];
-				}
-			}
-			break;
+				break;
 			case "sharp":
-			if (!dir) {
-				var half = Math.floor(height / 2);
-				path = ["M", x, y + half, "l", 0, -height, Math.max(width - half, 0), 0, Math.min(half, width), half, -Math.min(half, width), half + (half * 2 < height), "z"];
-			} else {
-				var half = Math.floor(width / 2);
-				path = ["M", x + half, y, "l", -width, 0, 0, -Math.max(height - half, 0), half, -Math.min(half, height), half, Math.min(half, height), half, "z"];
-			}
-			break;
+				if (!dir) {
+					var half = Math.floor(height / 2);
+					path = ["M", x, y + half, "l", 0, -height, Math.max(width - half, 0), 0, Math.min(half, width), half, -Math.min(half, width), half + (half * 2 < height), "z"];
+				} else {
+					var half = Math.floor(width / 2);
+					path = ["M", x + half, y, "l", -width, 0, 0, -Math.max(height - half, 0), half, -Math.min(half, height), half, Math.min(half, height), half, "z"];
+				}
+				break;
 			case "square":
-			if (!dir) {
-				path = ["M", x, y + Math.floor(height / 2), "l", 0, -height, width, 0, 0, height, "z"];
-			} else {
-				path = ["M", x + Math.floor(width / 2), y, "l", 1 - width, 0, 0, -height, width - 1, 0, "z"];
-			}
-			break;
+				if (!dir) {
+					path = ["M", x, y + Math.floor(height / 2), "l", 0, -height, width, 0, 0, height, "z"];
+				} else {
+					path = ["M", x + Math.floor(width / 2), y, "l", 1 - width, 0, 0, -height, width - 1, 0, "z"];
+				}
+				break;
 			case "soft":
-			var r;
-			if (!dir) {
-				r = Math.min(width, Math.round(height / 5));
-				path = ["M", x + .5, y + .5 - Math.floor(height / 2), "l", width - r, 0, "a", r, r, 0, 0, 1, r, r, "l", 0, height - r * 2, "a", r, r, 0, 0, 1, -r, r, "l", r - width, 0, "z"];
-			} else {
-				r = Math.min(Math.round(width / 5), height);
-				path = ["M", x - Math.floor(width / 2), y, "l", 0, r - height, "a", r, r, 0, 0, 1, r, -r, "l", width - 2 * r, 0, "a", r, r, 0, 0, 1, r, r, "l", 0, height - r, "z"];
-			}
+				var r;
+				if (!dir) {
+					r = Math.min(width, Math.round(height / 5));
+					path = ["M", x + .5, y + .5 - Math.floor(height / 2), "l", width - r, 0, "a", r, r, 0, 0, 1, r, r, "l", 0, height - r * 2, "a", r, r, 0, 0, 1, -r, r, "l", r - width, 0, "z"];
+				} else {
+					r = Math.min(Math.round(width / 5), height);
+					path = ["M", x - Math.floor(width / 2), y, "l", 0, r - height, "a", r, r, 0, 0, 1, r, -r, "l", width - 2 * r, 0, "a", r, r, 0, 0, 1, r, r, "l", 0, height - r, "z"];
+				}
 		}
 		if (isPath) {
 			return path.join(",");
@@ -163,20 +162,25 @@
 	Raphael.fn.g.disc = function (cx, cy, r) {
 		return this.circle(cx, cy, r);
 	};
+	
 	Raphael.fn.g.line = function (cx, cy, r) {
 		return this.rect(cx - r, cy - r / 5, 2 * r, 2 * r / 5);
 	};
+	
 	Raphael.fn.g.square = function (cx, cy, r) {
 		r = r * .7;
 		return this.rect(cx - r, cy - r, 2 * r, 2 * r);
 	};
+	
 	Raphael.fn.g.triangle = function (cx, cy, r) {
 		r *= 1.75;
 		return this.path("M".concat(cx, ",", cy, "m0-", r * .58, "l", r * .5, ",", r * .87, "-", r, ",0z"));
 	};
+	
 	Raphael.fn.g.diamond = function (cx, cy, r) {
 		return this.path(["M", cx, cy - r, "l", r, r, -r, r, -r, -r, r, -r, "z"]);
 	};
+	
 	Raphael.fn.g.flower = function (cx, cy, r, n) {
 		r = r * 1.25;
 		var rout = r,
@@ -191,6 +195,7 @@
 		points.push("z");
 		return this.path(points.join(","));
 	};
+	
 	Raphael.fn.g.star = function (cx, cy, r, r2) {
 		r2 = r2 || r * .5;
 		var points = ["M", cx, cy + r2, "L"],
@@ -202,14 +207,17 @@
 		points.push("z");
 		return this.path(points.join(","));
 	};
+	
 	Raphael.fn.g.cross = function (cx, cy, r) {
 		r = r / 2.5;
 		return this.path("M".concat(cx - r, ",", cy, "l", [-r, -r, r, -r, r, r, r, -r, r, r, -r, r, r, r, -r, r, -r, -r, -r, r, -r, -r, "z"]));
 	};
+	
 	Raphael.fn.g.plus = function (cx, cy, r) {
 		r = r / 2;
 		return this.path("M".concat(cx - r / 2, ",", cy - r / 2, "l", [0, -r, r, 0, 0, r, r, 0, 0, r, -r, 0, 0, r, -r, 0, 0, -r, -r, 0, 0, -r, "z"]));
 	};
+	
 	Raphael.fn.g.arrow = function (cx, cy, r) {
 		return this.path("M".concat(cx - r * .7, ",", cy - r * .4, "l", [r * .6, 0, 0, -r * .4, r, r * .8, -r, r * .8, 0, -r * .4, -r * .6, 0], "z"));
 	};
@@ -244,6 +252,7 @@
 		res.update();
 		return res;
 	};
+	
 	Raphael.fn.g.popupit = function (x, y, set, dir, size) {
 		dir = dir == null ? 2 : dir;
 		size = size || 5;
@@ -263,6 +272,7 @@
 		set.translate(xy.x - w - bb.x, xy.y - h - bb.y);
 		return this.path(p).attr({fill: "#000", stroke: "none"}).insertBefore(set.node ? set : set[0]);
 	};
+	
 	Raphael.fn.g.popup = function (x, y, text, dir, size) {
 		dir = dir == null ? 2 : dir;
 		size = size || 5;
@@ -296,6 +306,7 @@
 		};
 		return res.update(x, y);
 	};
+	
 	Raphael.fn.g.flag = function (x, y, text, angle) {
 		angle = angle || 0;
 		text = text || "$9.99";
@@ -316,6 +327,7 @@
 		};
 		return res.update(x, y);
 	};
+	
 	Raphael.fn.g.label = function (x, y, text) {
 		var res = this.set();
 		res.push(this.rect(x, y, 10, 10).attr({stroke: "none", fill: "#000"}));
@@ -328,11 +340,13 @@
 		res.update();
 		return res;
 	};
+	
 	Raphael.fn.g.labelit = function (set) {
 		var bb = set.getBBox(),
 		r = Math.min(20, bb.width + 10, bb.height + 10) / 2;
 		return this.rect(bb.x - r / 2, bb.y - r / 2, bb.width + r, bb.height + r, r).attr({stroke: "none", fill: "#000"}).insertBefore(set[0]);
 	};
+	
 	Raphael.fn.g.drop = function (x, y, text, size, angle) {
 		size = size || 30;
 		angle = angle || 0;
@@ -344,6 +358,7 @@
 		res.text = res[1];
 		return res;
 	};
+	
 	Raphael.fn.g.blob = function (x, y, text, angle, size) {
 		angle = (+angle + 1 ? angle : 45) + 90;
 		size = size || 12;
@@ -418,6 +433,7 @@
 		var f = round((from - (i > 0 ? 0 : .5)) * Math.pow(10, i)) / Math.pow(10, i);
 		return {from: f, to: t, power: i};
 	};
+	
 	Raphael.fn.g.axis = function (x, y, length, from, to, steps, orientation, labels, type, dashsize) {
 		dashsize = dashsize == null ? 2 : dashsize;
 		type = type || "t";
@@ -493,6 +509,7 @@
 		fs[1].s = fs[1].s / times;
 		this.attr({fill: "hsb(" + [fs[0].h, fs[0].s, fs[0].b] + ")", stroke: "hsb(" + [fs[1].h, fs[1].s, fs[1].b] + ")"});
 	};
+	
 	Raphael.el.darker = function (times) {
 		times = times || 2;
 		var fs = [this.attrs.fill, this.attrs.stroke];
@@ -505,6 +522,7 @@
 		fs[1].b = fs[1].b / times;
 		this.attr({fill: "hsb(" + [fs[0].h, fs[0].s, fs[0].b] + ")", stroke: "hsb(" + [fs[1].h, fs[1].s, fs[1].b] + ")"});
 	};
+	
 	Raphael.el.original = function () {
 		if (this.fs) {
 			this.attr({fill: this.fs[0], stroke: this.fs[1]});
