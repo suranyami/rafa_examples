@@ -83,7 +83,7 @@ module Rafa
         Bar.new(self, *args)
       end
       
-      # Generates a +Bar+ chart object
+      # Generates a +Horizontal Bar+ chart object
       def hbarchart(*args)
         HBar.new(self, *args)
       end
